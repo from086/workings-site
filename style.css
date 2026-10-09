@@ -1,0 +1,313 @@
+/* ========== 色・文字 ========== */
+:root {
+  --bg: #fafafa;
+  --text: #1a1a1a;
+  --text-secondary: rgba(60, 60, 67, 0.65);
+  --paper: #ffffff;
+  --paper-text: #1a1a1a;
+  --paper-shadow: 0 0 10px rgba(0, 0, 0, 0.1), 0 24px 60px rgba(0, 0, 0, 0.08);
+  --caret: #0a84ff;
+  --button-bg: #1a1a1a;
+  --button-text: #ffffff;
+  --sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Segoe UI", sans-serif;
+  --serif: "Iowan Old Style", "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111113;
+    --text: #f2f2f7;
+    --text-secondary: rgba(235, 235, 245, 0.6);
+    --button-bg: #f2f2f7;
+    --button-text: #111113;
+    /* 紙と問題文も反転させる（背景よりわずかに明るい紙に、明るい文字） */
+    --paper: #1c1c1e;
+    --paper-text: #f2f2f7;
+    --paper-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 24px 60px rgba(0, 0, 0, 0.4);
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 表示中でない言語の要素を隠す */
+:root[lang="en"] [data-lang="ja"],
+:root[lang="ja"] [data-lang="en"] {
+  display: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ========== ヘッダー・フッター ========== */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(16px, 4vw, 40px);
+}
+
+/* ロゴ。明るい背景用（黒）と暗い背景用（白）を、表示モードに合わせて切り替える */
+.logo {
+  display: block;
+  line-height: 0;
+}
+
+.logo img {
+  width: auto;
+  height: clamp(36px, 6vw, 44px);
+}
+
+.logo-dark { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo-light { display: none; }
+  :root:not([data-theme="light"]) .logo-dark { display: inline; }
+}
+
+.lang-switch {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.lang-switch button {
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.lang-switch button[aria-pressed="true"] {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.site-footer {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.footer-links a:hover { text-decoration: underline; }
+
+/* ========== プライバシーポリシー・サポート ========== */
+.doc-main {
+  display: block;
+  padding: 16px;
+}
+
+.doc {
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.doc h1 { font-size: clamp(26px, 5vw, 32px); margin: 16px 0 4px; }
+.doc h2 { font-size: 19px; margin: 36px 0 8px; }
+.doc h3 { font-size: 16px; margin: 24px 0 4px; }
+.doc p, .doc ol { margin: 0 0 12px; }
+.doc ol { padding-left: 1.4em; }
+.doc a { color: var(--caret); }
+.doc-date { color: var(--text-secondary); font-size: 14px; }
+
+/* ========== ヒーロー ========== */
+main {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 40px) 16px;
+}
+
+.hero {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 回答用紙（A4 の一部を切り取ったような紙） */
+.paper {
+  position: relative;
+  width: 100%;
+  margin: 0 0 clamp(32px, 6vw, 56px);
+  padding: clamp(28px, 6vw, 56px) clamp(22px, 6vw, 56px);
+  background: var(--paper);
+  color: var(--paper-text);
+  box-shadow: var(--paper-shadow);
+  text-align: left;
+  font-family: var(--serif);
+  /* 紙の上下の端をフェードさせ、紙の一部を写しているように見せる */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 88%, transparent 100%);
+  animation: paper-in 1.2s ease-out both;
+}
+
+.problem { display: flex; flex-direction: column; gap: 0.7em; }
+
+.line {
+  margin: 0;
+  font-size: clamp(15px, 2.3vw, 19px);
+  line-height: 1.7;
+}
+
+.formula { font-style: italic; letter-spacing: 0.04em; padding-left: 1.5em; }
+
+/* ピントの合っている行から離れるほど強くぼかす（被写界深度）。
+   開いた直後は全体にピントが合っていて、0.7 秒後に周りだけがぼけていく */
+.blur-1 { --blur: 1.1px; --dim: 0.85; }
+.blur-2 { --blur: 1.8px; --dim: 0.72; }
+.blur-3 { --blur: 2.6px; --dim: 0.6; }
+.blur-4 { --blur: 3.4px; --dim: 0.5; }
+
+[class*="blur-"] {
+  animation: defocus 1.1s ease-in-out 0.7s both;
+}
+
+@keyframes defocus {
+  from { filter: blur(0); opacity: 1; }
+  to { filter: blur(var(--blur)); opacity: var(--dim); }
+}
+
+/* ピントの合う 1 文。文字の大きさは問題文と同じ（周りがぼけることで目立たせる）。
+   問題文との間隔は、段落どうしの間隔（0.7em）の 1.5 倍にする */
+.focus {
+  margin-top: 0.35em;
+  font-weight: 600;
+}
+
+/* 日本語は文節の途中で改行しない（対応していないブラウザでは通常の改行になる） */
+:root[lang="ja"] .focus,
+:root[lang="ja"] .lead {
+  word-break: auto-phrase;
+}
+
+/* ========== 書き換えのアニメーション ==========
+   main.js が 1 文字ずつ <span class="ch"> に分け、
+   現れる時刻 --in・消える時刻 --out を割り当てる。表示の切り替えはすべて CSS で行う。
+   （display はアニメーションで切り替えられない場合があるため、文字は大きさ 0 で隠す） */
+.edit .ch {
+  font-size: 0;
+  animation: ch-show 0s var(--in, 0s) forwards;
+}
+
+.edit .ch.out {
+  animation: ch-show 0s var(--in, 0s) forwards, ch-hide 0s var(--out) forwards;
+}
+
+/* カーソル（その時刻に、その位置にあるときだけ表示される） */
+.edit .caret {
+  position: relative;
+  visibility: hidden;
+  animation: caret-show 0s var(--in, 0s) forwards;
+}
+
+.edit .caret.out {
+  animation: caret-show 0s var(--in, 0s) forwards, caret-hide 0s var(--out) forwards;
+}
+
+.edit .caret::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0.12em;
+  width: 2px;
+  height: 1.15em;
+  border-radius: 1px;
+  background: var(--caret);
+  animation: blink 1.06s steps(1, end) var(--in, 0s) infinite;
+}
+
+@keyframes ch-show { to { font-size: 1em; } }
+@keyframes ch-hide { to { font-size: 0; } }
+@keyframes caret-show { to { visibility: visible; } }
+@keyframes caret-hide { to { visibility: hidden; } }
+@keyframes blink { 50% { opacity: 0; } }
+
+@keyframes paper-in {
+  from { opacity: 0; transform: translateY(12px); }
+}
+
+/* ========== 説明文・ボタン（書き換えが終わってから表示） ========== */
+.after-headline {
+  animation: fade-up 1.1s ease-out var(--reveal, 0s) both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.lead {
+  margin: 0 0 28px;
+  color: var(--text-secondary);
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.8;
+}
+
+.store-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.store-button[aria-disabled="true"] {
+  cursor: default;
+}
+
+/* 動きを減らす設定のときは、アニメーションなしで書き換え後の文を表示する */
+@media (prefers-reduced-motion: reduce) {
+  .paper, .after-headline { animation: none; opacity: 1; }
+  [class*="blur-"] { animation: none; filter: blur(var(--blur)); opacity: var(--dim); }
+}

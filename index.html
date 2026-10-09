@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WORKINGS — Don’t show your workings. We’ve got them.</title>
+  <meta name="description" content="Solve on iPad with Apple Pencil. WORKINGS records every step — even the pauses — as a time-lapse video and a PDF.">
+  <meta property="og:title" content="WORKINGS">
+  <meta property="og:description" content="Don’t show your workings. We’ve got them.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://from086.github.io/workings-site/images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="images/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <meta name="theme-color" content="#fafafa">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="./">
+      <img class="logo-light" src="images/logo-light.svg" width="120" height="40" alt="WORKINGS">
+      <img class="logo-dark" src="images/logo-dark.svg" width="120" height="40" alt="WORKINGS">
+    </a>
+    <nav class="lang-switch" aria-label="Language">
+      <button type="button" data-set-lang="en">English</button>
+      <button type="button" data-set-lang="ja">日本語</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <h1 class="visually-hidden">
+        <span data-lang="en">Don’t show your workings. We’ve got them.</span>
+        <span data-lang="ja">問題を解いた手順は必要ありません。こちらで把握します。</span>
+      </h1>
+
+      <!-- 数学の問題文。最後の 1 文にだけピントが合い、カーソルで書き換えられる -->
+      <figure class="paper" aria-hidden="true">
+        <div class="problem" data-lang="en">
+          <p class="line blur-4">Question 4</p>
+          <p class="line blur-3">A ball is thrown vertically upward from the top of a building 20 m high with an initial speed of 15 m/s. Take g = 9.8 m/s².</p>
+          <p class="line blur-3 formula">h = v₀t − ½gt²</p>
+          <p class="line blur-2">(a) Find the greatest height above the ground reached by the ball.</p>
+          <p class="line blur-1">(b) Find the time taken for the ball to reach the ground.</p>
+          <p class="line focus"><span class="edit" data-edit="en">Don’t show your workings.<br>We’ve got them.</span></p>
+        </div>
+        <div class="problem" data-lang="ja">
+          <p class="line blur-4">問 4</p>
+          <p class="line blur-3">高さ 20 m の建物の屋上から、初速 15 m/s でボールを真上に投げ上げた。重力加速度の大きさを 9.8 m/s² とする。</p>
+          <p class="line blur-3 formula">h = v₀t − ½gt²</p>
+          <p class="line blur-2">(1) ボールが達する、地面からの最高点の高さを求めよ。</p>
+          <p class="line blur-1">(2) ボールが地面に達するまでの時間を求めよ。</p>
+          <p class="line focus"><span class="edit" data-edit="ja">問題を解いた手順は必要ありません。<br>こちらで把握します。</span></p>
+        </div>
+      </figure>
+
+      <p class="lead after-headline">
+        <span data-lang="en">Solve on iPad with Apple Pencil.<br>WORKINGS records every step — even the pauses — as a time-lapse video and a PDF.</span>
+        <span data-lang="ja">iPad と Apple Pencil で解くだけ。<br>考えて手が止まった時間も含めて、解答の過程をタイムラプス動画と PDF に記録します。</span>
+      </p>
+
+      <!--
+        App Store への導線。公開後は href を App Store の URL に変え、
+        Apple 公式の「App Store からダウンロード」バッジ画像に差し替える。
+      -->
+      <a class="store-button after-headline" href="#" aria-disabled="true">
+        <span data-lang="en">Coming soon to the App Store</span>
+        <span data-lang="ja">App Store で近日公開</span>
+      </a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav class="footer-links">
+      <a href="support.html"><span data-lang="en">Support</span><span data-lang="ja">サポート</span></a>
+      <a href="privacy.html"><span data-lang="en">Privacy Policy</span><span data-lang="ja">プライバシーポリシー</span></a>
+    </nav>
+    <small>© 2026 tolv LLC</small>
+  </footer>
+</body>
+</html>
