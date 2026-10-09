@@ -1,17 +1,21 @@
 // キャッチコピーの書き換えと、言語の切り替え。
 // 書き換えのアニメーション自体は CSS（style.css）で行い、ここでは文字を部品に分けて
-// 「何ミリ秒後に現れる / 消える」を CSS 変数（--in / --out）として割り当てるだけにしている。
+// 「何ミリ秒後に現れる / 打ち消される」を CSS 変数（--in / --strike）として割り当てるだけにしている。
+// カーソルは --in に現れ、--out に消える。
 
-// 書き換えの手順。caret: カーソルの位置（文字数。"end" は末尾）、backspace: 消す文字数、type: 打つ文字（"\n" は改行）
+// 書き換えの手順。caret: カーソルの位置（文字数。"end" は末尾）、
+// strike: カーソルの後ろの文字に打ち消し線を引く文字数（カーソルは線の終わりに進む）、type: 打つ文字（"\n" は改行）。
+// 文字は消さずに打ち消し線を引き、新しく打つ文字は赤にする（書き換え後も、どこを直したかがわかるように）
 const SCRIPTS = {
   en: {
     from: "Show your workings.",
     steps: [
       ["wait", 1700],
-      ["caret", 1],          // 「S」の後ろ
+      ["caret", 0],          // 「Show」の前
       ["wait", 700],
-      ["backspace", 1],
-      ["type", "Don’t s"],
+      ["strike", 4],         // 「Show」
+      ["wait", 300],
+      ["type", " Don’t show"],
       ["wait", 600],
       ["caret", "end"],
       ["wait", 650],
@@ -19,12 +23,13 @@ const SCRIPTS = {
     ],
   },
   ja: {
-    from: "問題を解いた手順を示しなさい。",
+    from: "解答の過程も明記しなさい。",
     steps: [
       ["wait", 1700],
-      ["caret", -1],         // 「。」の前
+      ["caret", 5],          // 「解答の過程」の後ろ
       ["wait", 700],
-      ["backspace", 6],      // 「を示しなさい」
+      ["strike", 7],         // 「も明記しなさい」
+      ["wait", 300],
       ["type", "は必要ありません"],
       ["wait", 600],
       ["caret", "end"],
@@ -37,11 +42,11 @@ const SCRIPTS = {
 // 周りの行がぼけ終わるまで（style.css の defocus: 0.7s 待ち + 1.1s）
 const START_DELAY = 1800;
 const TYPE_INTERVAL = 85;
-const BACKSPACE_INTERVAL = 65;
+const STRIKE_INTERVAL = 65;
 
 /** 書き換えの手順から、文字とカーソルの部品を作り、表示・非表示の時刻を割り当てる。終了時刻（ms）を返す */
 function buildEdit(container, script) {
-  const nodes = [];   // 文書の並び順の部品（消えた文字・過去のカーソルも含む）
+  const nodes = [];   // 文書の並び順の部品（過去のカーソルも含む）
   const visible = []; // その時点で見えている文字（並び順）
   let time = START_DELAY;
   let caretIndex = script.from.length; // カーソルの前にある文字の数
@@ -67,7 +72,7 @@ function buildEdit(container, script) {
   const jitter = (i) => [0, 30, -15, 45, 10, -20, 25][i % 7];
 
   for (const ch of script.from) {
-    const node = { kind: "ch", ch, in: 0, out: null };
+    const node = { kind: "ch", ch, in: 0 };
     nodes.push(node);
     visible.push(node);
   }
@@ -84,13 +89,12 @@ function buildEdit(container, script) {
         caretIndex = value === "end" ? visible.length : value < 0 ? visible.length + value : value;
         openCaret();
         break;
-      case "backspace":
+      case "strike":
         for (let i = 0; i < value; i++) {
-          time += BACKSPACE_INTERVAL;
+          time += STRIKE_INTERVAL;
           closeCaret();
-          visible[caretIndex - 1].out = time;
-          visible.splice(caretIndex - 1, 1);
-          caretIndex -= 1;
+          visible[caretIndex].strike = time;
+          caretIndex += 1;
           openCaret();
         }
         break;
@@ -98,7 +102,7 @@ function buildEdit(container, script) {
         for (const ch of value) {
           time += TYPE_INTERVAL + jitter(keystroke++);
           closeCaret();
-          const node = { kind: "ch", ch, in: time, out: null };
+          const node = { kind: "ch", ch, in: time, typed: true };
           insertTyped(visible[caretIndex - 1] ?? null, node);
           visible.splice(caretIndex, 0, node);
           caretIndex += 1;
@@ -119,7 +123,12 @@ function buildEdit(container, script) {
     span.className = node.kind;
     if (node.kind === "ch") span.textContent = node.ch;
     span.style.setProperty("--in", `${node.in}ms`);
-    if (node.out !== null) {
+    if (node.typed) span.classList.add("typed");
+    if (node.strike !== undefined) {
+      span.classList.add("struck");
+      span.style.setProperty("--strike", `${node.strike}ms`);
+    }
+    if (node.kind === "caret" && node.out !== null) {
       span.classList.add("out");
       span.style.setProperty("--out", `${node.out}ms`);
     }

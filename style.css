@@ -1,6 +1,8 @@
 /* ========== 色・文字 ========== */
 :root {
   --bg: #fafafa;
+  /* 書き換えた箇所（打ち消し線と、新しく打った文字）の色 */
+  --mark: #ff0000;
   --text: #1a1a1a;
   --text-secondary: rgba(60, 60, 67, 0.65);
   --paper: #ffffff;
@@ -234,8 +236,23 @@ main {
   animation: ch-show 0s var(--in, 0s) forwards;
 }
 
-.edit .ch.out {
-  animation: ch-show 0s var(--in, 0s) forwards, ch-hide 0s var(--out) forwards;
+/* 新しく打った文字は赤 */
+.edit .typed,
+.edit ins {
+  color: var(--mark);
+  text-decoration: none;
+}
+
+/* 元の文字は消さずに、赤い打ち消し線を引く */
+.edit .ch.struck {
+  text-decoration-color: var(--mark);
+  text-decoration-thickness: 0.08em;
+  animation: ch-show 0s var(--in, 0s) forwards, strike 0s var(--strike) forwards;
+}
+
+.edit s {
+  text-decoration-color: var(--mark);
+  text-decoration-thickness: 0.08em;
 }
 
 /* カーソル（その時刻に、その位置にあるときだけ表示される） */
@@ -262,7 +279,7 @@ main {
 }
 
 @keyframes ch-show { to { font-size: 1em; } }
-@keyframes ch-hide { to { font-size: 0; } }
+@keyframes strike { to { text-decoration-line: line-through; } }
 @keyframes caret-show { to { visibility: visible; } }
 @keyframes caret-hide { to { visibility: hidden; } }
 @keyframes blink { 50% { opacity: 0; } }
