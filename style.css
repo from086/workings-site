@@ -159,7 +159,8 @@ main {
   flex: 1;
   display: grid;
   place-items: center;
-  padding: clamp(16px, 4vw, 40px) 16px;
+  /* 上の余白は小さめにして、iPad の横向きでも App Store のボタンまでが最初の画面に収まるようにする */
+  padding: clamp(4px, 1vw, 12px) 16px clamp(16px, 4vw, 40px);
 }
 
 .hero {
@@ -175,7 +176,7 @@ main {
 .paper {
   position: relative;
   width: 100%;
-  margin: 0 0 clamp(32px, 6vw, 56px);
+  margin: 0 0 clamp(20px, 3vw, 32px);
   padding: clamp(28px, 6vw, 56px) clamp(22px, 6vw, 56px);
   background: var(--paper);
   color: var(--paper-text);
@@ -199,7 +200,9 @@ main {
 .formula { font-style: italic; letter-spacing: 0.04em; padding-left: 1.5em; }
 
 /* ピントの合っている行から離れるほど強くぼかす（被写界深度）。
-   開いた直後は全体にピントが合っていて、0.7 秒後に周りだけがぼけていく */
+   開いた直後は全体にピントが合っていて、0.7 秒後に周りだけがぼけていく。
+   filter: blur は Safari（Mac・iPad）で要素の端にピンクの線が出ることがあるため、
+   文字を透明にして、ぼかした文字の影（text-shadow）でぼけを表す。影のぼかし半径は blur() の約 2 倍 */
 .blur-1 { --blur: 1.1px; --dim: 0.85; }
 .blur-2 { --blur: 1.8px; --dim: 0.72; }
 .blur-3 { --blur: 2.6px; --dim: 0.6; }
@@ -210,8 +213,8 @@ main {
 }
 
 @keyframes defocus {
-  from { filter: blur(0); opacity: 1; }
-  to { filter: blur(var(--blur)); opacity: var(--dim); }
+  from { color: var(--paper-text); text-shadow: 0 0 0 transparent; opacity: 1; }
+  to { color: transparent; text-shadow: 0 0 calc(var(--blur) * 2) var(--paper-text); opacity: var(--dim); }
 }
 
 /* ピントの合う 1 文。文字の大きさは問題文と同じ（周りがぼけることで目立たせる）。
@@ -326,5 +329,5 @@ main {
 /* 動きを減らす設定のときは、アニメーションなしで書き換え後の文を表示する */
 @media (prefers-reduced-motion: reduce) {
   .paper, .after-headline { animation: none; opacity: 1; }
-  [class*="blur-"] { animation: none; filter: blur(var(--blur)); opacity: var(--dim); }
+  [class*="blur-"] { animation: none; color: transparent; text-shadow: 0 0 calc(var(--blur) * 2) var(--paper-text); opacity: var(--dim); }
 }
