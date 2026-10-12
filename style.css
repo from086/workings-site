@@ -322,8 +322,8 @@ main {
   text-decoration: none;
 }
 
-.store-button[aria-disabled="true"] {
-  cursor: default;
+.store-button:hover {
+  opacity: 0.85;
 }
 
 /* 動きを減らす設定のときは、アニメーションなしで書き換え後の文を表示する */

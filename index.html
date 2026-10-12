@@ -14,6 +14,8 @@
   <link rel="icon" href="images/icon-192.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <meta name="theme-color" content="#fafafa">
+  <!-- iPhone・iPad の Safari で、ページ上部に App Store へのバナーを出す -->
+  <meta name="apple-itunes-app" content="app-id=6820890998">
   <link rel="stylesheet" href="style.css">
   <script src="main.js" defer></script>
 </head>
@@ -61,13 +63,10 @@
         <span data-lang="ja">iPad と Apple Pencil で解くだけ。<br>考えて手が止まった時間も含めて、解答の過程をタイムラプス動画と PDF に記録します。</span>
       </p>
 
-      <!--
-        App Store への導線。公開後は href を App Store の URL に変え、
-        Apple 公式の「App Store からダウンロード」バッジ画像に差し替える。
-      -->
-      <a class="store-button after-headline" href="#" aria-disabled="true">
-        <span data-lang="en">Coming soon to the App Store</span>
-        <span data-lang="ja">App Store で近日公開</span>
+      <!-- App Store への導線。国を指定しない URL にして、見る人の国のストアが開くようにする -->
+      <a class="store-button after-headline" href="https://apps.apple.com/app/id6820890998">
+        <span data-lang="en">Download on the App Store</span>
+        <span data-lang="ja">App Store からダウンロード</span>
       </a>
     </section>
   </main>
