@@ -5,7 +5,8 @@
 
 // 書き換えの手順。caret: カーソルの位置（文字数。"end" は末尾）、
 // strike: カーソルの後ろの文字に打ち消し線を引く文字数（カーソルは線の終わりに進む）、type: 打つ文字（"\n" は改行）。
-// 文字は消さずに打ち消し線を引き、新しく打つ文字は赤にする（書き換え後も、どこを直したかがわかるように）
+// 文字は消さずに打ち消し線を引き、直した文字は赤にする（書き換え後も、どこを直したかがわかるように）。
+// 直しではなく書き足す文は { plain: true } を付けて、元の文と同じ黒で打つ
 const SCRIPTS = {
   en: {
     from: "Show your workings.",
@@ -19,7 +20,7 @@ const SCRIPTS = {
       ["wait", 600],
       ["caret", "end"],
       ["wait", 650],
-      ["type", "\nWe’ve got them."],
+      ["type", "\nWe’ve got them ; )", { plain: true }],
     ],
   },
   ja: {
@@ -34,7 +35,7 @@ const SCRIPTS = {
       ["wait", 600],
       ["caret", "end"],
       ["wait", 650],
-      ["type", "\nこちらで把握します。"],
+      ["type", "\nこちらで把握しておきます 😉", { plain: true }],
     ],
   },
 };
@@ -79,7 +80,7 @@ function buildEdit(container, script) {
   openCaret();
 
   let keystroke = 0;
-  for (const [action, value] of script.steps) {
+  for (const [action, value, options] of script.steps) {
     switch (action) {
       case "wait":
         time += value;
@@ -102,7 +103,7 @@ function buildEdit(container, script) {
         for (const ch of value) {
           time += TYPE_INTERVAL + jitter(keystroke++);
           closeCaret();
-          const node = { kind: "ch", ch, in: time, typed: true };
+          const node = { kind: "ch", ch, in: time, typed: !options?.plain };
           insertTyped(visible[caretIndex - 1] ?? null, node);
           visible.splice(caretIndex, 0, node);
           caretIndex += 1;
